@@ -1,65 +1,83 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
+#calc with a classic gui--> performs basic arithmatic operations with exceptional handling(for bad user input)
 
-class CalculatorApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Simple Calculator")
+window = tk.Tk()
+window.title("Simple GUI Calc")
+window.geometry("300x400")
+window.configure(bg="#202124")
 
-        self.create_widgets()
+entry = tk.Entry(window, justify='right', font=('Arial', 20), bg="#3C4043", fg="white")
+entry.grid(row=0, column=0, columnspan=4, padx=5, pady=5, sticky="nsew")
 
-    def create_widgets(self):
-        # Create and place widgets
-        self.num1_label = tk.Label(self.root, text="Enter first number:")
-        self.num1_label.grid(row=0, column=0, padx=10, pady=10)
+result_label = tk.Label(window, text="", pady=10, bg="#202124", fg="#FFFFFF", font=('Arial', 16))
+result_label.grid(row=1, column=0, columnspan=4)
 
-        self.num1_entry = tk.Entry(self.root)
-        self.num1_entry.grid(row=0, column=1, padx=10, pady=10)
+def calculate():
+    try:
+        expression = entry.get()
+        result = eval(expression)
+        result_label.config(text=f"{result}")
+    except Exception as e:
+        messagebox.showerror("Error", f"Invalid input: {e}")
 
-        self.num2_label = tk.Label(self.root, text="Enter second number:")
-        self.num2_label.grid(row=1, column=0, padx=10, pady=10)
+def insert_number(character):
+    current = entry.get()
+    entry.delete(0, tk.END)
+    entry.insert(0, current + str(character))
 
-        self.num2_entry = tk.Entry(self.root)
-        self.num2_entry.grid(row=1, column=1, padx=10, pady=10)
+def clear_entry():
+    entry.delete(0, tk.END)
+    result_label.config(text="")
 
-        self.operation_label = tk.Label(self.root, text="Choose operation:")
-        self.operation_label.grid(row=2, column=0, padx=10, pady=10)
+style = ttk.Style()
+style.configure('TButton', font=('Arial', 14), foreground="black", background="#E0E0E0")
+style.map('TButton', background=[('active', '#B0B0B0')])
 
-        self.operation_var = tk.StringVar(value="add")
-        self.operation_menu = tk.OptionMenu(self.root, self.operation_var, "add", "subtract", "multiply", "divide")
-        self.operation_menu.grid(row=2, column=1, padx=10, pady=10)
+button_clear = ttk.Button(window, text="C", command=clear_entry, style="TButton")
+button_clear.grid(row=2, column=0, sticky="nsew")
+button_div = ttk.Button(window, text="/", command=lambda: insert_number('/'), style="TButton")
+button_div.grid(row=2, column=1, sticky="nsew")
+button_mul = ttk.Button(window, text="*", command=lambda: insert_number('*'), style="TButton")
+button_mul.grid(row=2, column=2, sticky="nsew")
+button_sub = ttk.Button(window, text="-", command=lambda: insert_number('-'), style="TButton")
+button_sub.grid(row=2, column=3, sticky="nsew")
 
-        self.calculate_button = tk.Button(self.root, text="Calculate", command=self.calculate)
-        self.calculate_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
+button7 = ttk.Button(window, text="7", command=lambda: insert_number(7), style="TButton")
+button7.grid(row=3, column=0, sticky="nsew")
+button8 = ttk.Button(window, text="8", command=lambda: insert_number(8), style="TButton")
+button8.grid(row=3, column=1, sticky="nsew")
+button9 = ttk.Button(window, text="9", command=lambda: insert_number(9), style="TButton")
+button9.grid(row=3, column=2, sticky="nsew")
+button_add = ttk.Button(window, text="+", command=lambda: insert_number('+'), style="TButton")
+button_add.grid(row=3, column=3, sticky="nsew")
 
-        self.result_label = tk.Label(self.root, text="Result: ")
-        self.result_label.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
+button4 = ttk.Button(window, text="4", command=lambda: insert_number(4), style="TButton")
+button4.grid(row=4, column=0, sticky="nsew")
+button5 = ttk.Button(window, text="5", command=lambda: insert_number(5), style="TButton")
+button5.grid(row=4, column=1, sticky="nsew")
+button6 = ttk.Button(window, text="6", command=lambda: insert_number(6), style="TButton")
+button6.grid(row=4, column=2, sticky="nsew")
 
-    def calculate(self):
-        try:
-            num1 = float(self.num1_entry.get())
-            num2 = float(self.num2_entry.get())
-            operation = self.operation_var.get()
+button1 = ttk.Button(window, text="1", command=lambda: insert_number(1), style="TButton")
+button1.grid(row=5, column=0, sticky="nsew")
+button2 = ttk.Button(window, text="2", command=lambda: insert_number(2), style="TButton")
+button2.grid(row=5, column=1, sticky="nsew")
+button3 = ttk.Button(window, text="3", command=lambda: insert_number(3), style="TButton")
+button3.grid(row=5, column=2, sticky="nsew")
 
-            if operation == "add":
-                result = num1 + num2
-            elif operation == "subtract":
-                result = num1 - num2
-            elif operation == "multiply":
-                result = num1 * num2
-            elif operation == "divide":
-                if num2 == 0:
-                    raise ValueError("Cannot divide by zero")
-                result = num1 / num2
-            else:
-                raise ValueError("Invalid operation")
+button0 = ttk.Button(window, text="0", command=lambda: insert_number(0), style="TButton")
+button0.grid(row=6, column=0, columnspan=2, sticky="nsew")
+button_point = ttk.Button(window, text=".", command=lambda: insert_number('.'), style="TButton")
+button_point.grid(row=6, column=2, sticky="nsew")
 
-            self.result_label.config(text=f"Result: {result}")
+button_equals = ttk.Button(window, text="=", command=calculate, style="TButton")
+button_equals.grid(row=4, column=3, rowspan=3, sticky="nsew")
 
-        except ValueError as e:
-            messagebox.showerror("Input Error", str(e))
+for i in range(4):
+    window.columnconfigure(i, weight=1)
+for i in range(7):
+    window.rowconfigure(i, weight=1)
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = CalculatorApp(root)
-    root.mainloop()
+window.mainloop()
